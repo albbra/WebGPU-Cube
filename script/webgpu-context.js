@@ -30,6 +30,10 @@ export class WebGPUContext {
     return this.device;
   }
 
+  resize() {
+    this.createDepthTexture();
+  }
+
   createBuffers() {
     // Vertex buffer
     this.vertexBuffer = this.device.createBuffer({
@@ -57,6 +61,7 @@ export class WebGPUContext {
   }
 
   createDepthTexture() {
+    if (this.depthTexture) this.depthTexture.destroy();
     this.depthTexture = this.device.createTexture({
       size: [this.canvas.width, this.canvas.height],
       format: "depth24plus",

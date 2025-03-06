@@ -7,8 +7,11 @@ import { ShaderLoader } from "./shader-loader.js";
 async function initWebGPU() {
   try {
     const canvas = document.getElementById("webgpuCanvas");
-    canvas.width = canvas.clientWidth * window.devicePixelRatio;
-    canvas.height = canvas.clientHeight * window.devicePixelRatio;
+    function updateCanvasSize() {
+      canvas.width = canvas.clientWidth * window.devicePixelRatio;
+      canvas.height = canvas.clientHeight * window.devicePixelRatio;
+    }
+    updateCanvasSize();
 
     // Initialize core systems
     const webGPU = new WebGPUContext(canvas);
@@ -22,6 +25,13 @@ async function initWebGPU() {
     // Initialize remaining systems
     const transforms = new TransformController(input, webGPU);
     const renderer = new RenderLoop(webGPU, transforms);
+
+    // Handle window resize
+    const onResize = () => {
+      updateCanvasSize();
+      webGPU.resize();
+    };
+    window.addEventListener("resize", onResize);
 
     // Start rendering
     renderer.start();
