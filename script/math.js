@@ -9,6 +9,7 @@
 export function perspective(fovy, aspect, near, far) {
   const f = 1.0 / Math.tan(fovy / 2);
   const rangeInv = 1.0 / (near - far);
+
   return [
     f / aspect, 0, 0, 0,
     0, f, 0, 0,

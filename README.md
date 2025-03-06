@@ -75,7 +75,7 @@ WebGPU-Cube/
 ├── .vscode/
 │ └── settings.json           # VSCode workspace settings
 ├── scripts/                  # JavaScript source files
-│ ├── constants.js            # Geometry data (cube/sphere vertices)
+│ ├── constants.js            # Geometry data
 │ ├── input-handler.js        # Mouse/keyboard input handling
 │ ├── main.js                 # Application entry point
 │ ├── math.js                 # Matrix math utilities

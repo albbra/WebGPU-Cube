@@ -26,7 +26,6 @@ export class RenderLoop {
 
   // Execute WebGPU render pass
   executeRenderPass() {
-
     // Create command encoder
     const commandEncoder = this.webGPU.device.createCommandEncoder();
 

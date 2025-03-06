@@ -14,37 +14,35 @@ export class TransformController {
   }
 
   updateTransforms() {
-    // Calculate rotation matrices
-    const rotX = rotationX(this.input.rotXAngle);
-    const rotY = rotationY(this.input.rotYAngle);
-
-    // Combine rotations
-    const modelMatrix = multiplyMatrices(rotY, rotX);
-
-    // Camera/view matrix
-    const viewMatrix = translation(0, 0, -this.input.cameraZ);
-
-    // Projection matrix
     const aspect = this.webGPU.canvas.width / this.webGPU.canvas.height;
-    const projMatrix = perspective(Math.PI / 4, aspect, 0.1, 10.0);
 
-    // MVP matrix
-    const mvpMatrix = multiplyMatrices(
-      multiplyMatrices(modelMatrix, viewMatrix),
-      projMatrix
+    // Create matrices
+    const model = multiplyMatrices(
+      rotationY(this.input.rotYAngle),
+      rotationX(this.input.rotXAngle)
     );
 
-    this.updateUniformBuffer(mvpMatrix);
-    return mvpMatrix;
+    // Camera/view matrix
+    const view = translation(0, 0, -this.input.cameraZ);
+
+    // Projection matrix
+    const proj = perspective(Math.PI / 4, aspect, 0.1, 10.0);
+
+    // MVP matrix: PROJ * VIEW * MODEL
+    const mvp = multiplyMatrices(multiplyMatrices(model, view), proj);
+
+    this.updateUniformBuffer(mvp);
+    return mvp;
   }
 
   // Send matrix data to GPU
   updateUniformBuffer(mvpMatrix) {
-    const gpuBufferData = new Float32Array(mvpMatrix);
+    const alignedBuffer = new Float32Array(16);
+    alignedBuffer.set(mvpMatrix);
     this.webGPU.device.queue.writeBuffer(
       this.webGPU.uniformBuffer,
       0,
-      gpuBufferData
+      alignedBuffer.buffer
     );
   }
 }

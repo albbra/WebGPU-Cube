@@ -4,36 +4,47 @@ export class WebGPUContext {
   constructor(canvas) {
     // WebGPU resources
     this.canvas = canvas;
-    this.device = null;       // GPU device
-    this.pipeline = null;     // Render pipeline
-    this.uniformBuffer = null;// Matrix storage
+    this.device = null; // GPU device
+    this.pipeline = null; // Render pipeline
+    this.uniformBuffer = null; // Matrix storage
     this.depthTexture = null; // Depth buffer
     this.vertexBuffer = null; // Geometry data
-    this.indexBuffer = null;  // Index data
-    this.bindGroup = null;    // Resource bindings
+    this.indexBuffer = null; // Index data
+    this.bindGroup = null; // Resource bindings
   }
-  
+
   // Initialize WebGPU context
   async initialize() {
+    try {
+      // Adapter/device setup
+      const adapter = await navigator.gpu.requestAdapter();
+      this.device = await adapter.requestDevice();
 
-    // Adapter/device setup
-    const adapter = await navigator.gpu.requestAdapter();
-    this.device = await adapter.requestDevice();
+      // Canvas configuration
+      const context = this.canvas.getContext("webgpu");
+      const format = navigator.gpu.getPreferredCanvasFormat();
 
-    // Canvas configuration
-    const context = this.canvas.getContext("webgpu");
-    const format = navigator.gpu.getPreferredCanvasFormat();
+      context.configure({
+        device: this.device,
+        format: format,
+        alphaMode: "premultiplied",
+      });
 
-    context.configure({
-      device: this.device,
-      format: format,
-      alphaMode: "premultiplied",
-    });
+      // Create GPU buffers
+      this.createBuffers();
+      this.createDepthTexture();
+      return this.device;
+    } catch (error) {
+      this.cleanup();
+      throw error;
+    }
+  }
 
-    // Create GPU buffers
-    this.createBuffers();
-    this.createDepthTexture();
-    return this.device;
+  cleanup() {
+    this.vertexBuffer?.destroy();
+    this.indexBuffer?.destroy();
+    this.uniformBuffer?.destroy();
+    this.depthTexture?.destroy();
   }
 
   // Handle window resize
@@ -80,7 +91,6 @@ export class WebGPUContext {
 
   // Create render pipeline
   async createPipeline(shaderModule) {
-
     // Bind group layout for uniforms
     const bindGroupLayout = this.device.createBindGroupLayout({
       entries: [
