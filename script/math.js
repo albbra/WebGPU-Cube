@@ -59,10 +59,11 @@ export function transposeMatrix(m) {
 }
 
 export function scaleMatrix(m, factor) {
-  return [
-    m[0] * factor, m[1],         m[2],         m[3],
-    m[4],         m[5] * factor, m[6],         m[7],
-    m[8],         m[9],          m[10] * factor, m[11],
-    m[12],        m[13],         m[14],         m[15],
+  const scaleMat = [
+    factor, 0, 0, 0,
+    0, factor, 0, 0,
+    0, 0, factor, 0,
+    0, 0, 0, 1
   ];
+  return multiplyMatrices(scaleMat, m);
 }

@@ -2,7 +2,7 @@ export class InputHandler {
   constructor(canvas) {
     this.rotXAngle = 0;
     this.rotYAngle = 0;
-    this.cameraZ = 10;
+    this.cameraZ = 5;
     this.isDragging = false;
     this.lastMouseX = 0;
     this.lastMouseY = 0;

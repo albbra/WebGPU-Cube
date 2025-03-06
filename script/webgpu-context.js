@@ -90,10 +90,12 @@ export class WebGPUContext {
         buffers: [
           {
             attributes: [
+              // Position: 3 floats (offset 0)
               { shaderLocation: 0, offset: 0, format: "float32x3" },
+              // Color: 3 floats (offset 12 = 3 floats * 4 bytes)
               { shaderLocation: 1, offset: 12, format: "float32x3" },
             ],
-            arrayStride: 24,
+            arrayStride: 24, // 6 floats * 4 bytes = 24 bytes per vertex
             stepMode: "vertex",
           },
         ],

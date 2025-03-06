@@ -3,11 +3,8 @@ import {
   rotationX,
   rotationY,
   multiplyMatrices,
-  scaleMatrix,
   translation,
-  transposeMatrix,
 } from "./math.js";
-import { mat4ToString } from "./utils.js";
 
 export class TransformController {
   constructor(inputHandler, webGPUContext) {
@@ -19,9 +16,8 @@ export class TransformController {
     const rotX = rotationX(this.input.rotXAngle);
     const rotY = rotationY(this.input.rotYAngle);
 
-    // Combine rotations and scale
+    // Combine rotations
     const modelMatrix = multiplyMatrices(rotY, rotX);
-    const scaledModelMatrix = scaleMatrix(modelMatrix, 0.5);
 
     // Camera/view matrix
     const viewMatrix = translation(0, 0, -this.input.cameraZ);
@@ -32,30 +28,20 @@ export class TransformController {
 
     // MVP matrix
     const mvpMatrix = multiplyMatrices(
-      multiplyMatrices(projMatrix, viewMatrix),
-      scaledModelMatrix
+      multiplyMatrices(modelMatrix, viewMatrix),
+      projMatrix
     );
-
-    //Debug Output
-    console.log("Model Matrix:\n", mat4ToString(scaledModelMatrix));
-    console.log("View Matrix:\n", mat4ToString(viewMatrix));
-    console.log("Projection Matrix:\n", mat4ToString(projMatrix));
-    console.log("MVP Matrix:\n", mat4ToString(mvpMatrix));
 
     this.updateUniformBuffer(mvpMatrix);
     return mvpMatrix;
   }
 
   updateUniformBuffer(mvpMatrix) {
-    const transposedArray = transposeMatrix(mvpMatrix);
-    if (transposedArray.some((v) => isNaN(v))) {
-      console.error("Invalid matrix values");
-      return;
-    }
+    const gpuBufferData = new Float32Array(mvpMatrix);
     this.webGPU.device.queue.writeBuffer(
       this.webGPU.uniformBuffer,
       0,
-      new Float32Array(transposedArray)
+      gpuBufferData
     );
   }
 }
