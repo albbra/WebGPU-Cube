@@ -1,5 +1,6 @@
-// utils.js
+// Matrix formatting utility
 export function mat4ToString(m) {
+  // Convert 4x4 matrix to formatted string
     return [
       `${m[0].toFixed(2)} ${m[1].toFixed(2)} ${m[2].toFixed(2)} ${m[3].toFixed(2)}`,
       `${m[4].toFixed(2)} ${m[5].toFixed(2)} ${m[6].toFixed(2)} ${m[7].toFixed(2)}`,

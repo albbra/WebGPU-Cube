@@ -6,6 +6,7 @@ import {
   translation,
 } from "./math.js";
 
+// Transformation matrix controller
 export class TransformController {
   constructor(inputHandler, webGPUContext) {
     this.input = inputHandler;
@@ -13,6 +14,7 @@ export class TransformController {
   }
 
   updateTransforms() {
+    // Calculate rotation matrices
     const rotX = rotationX(this.input.rotXAngle);
     const rotY = rotationY(this.input.rotYAngle);
 
@@ -36,6 +38,7 @@ export class TransformController {
     return mvpMatrix;
   }
 
+  // Send matrix data to GPU
   updateUniformBuffer(mvpMatrix) {
     const gpuBufferData = new Float32Array(mvpMatrix);
     this.webGPU.device.queue.writeBuffer(

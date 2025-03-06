@@ -2,20 +2,25 @@ import { cubeVertices, cubeIndices } from "./constants.js";
 
 export class WebGPUContext {
   constructor(canvas) {
+    // WebGPU resources
     this.canvas = canvas;
-    this.device = null;
-    this.pipeline = null;
-    this.uniformBuffer = null;
-    this.depthTexture = null;
-    this.vertexBuffer = null;
-    this.indexBuffer = null;
-    this.bindGroup = null;
+    this.device = null;       // GPU device
+    this.pipeline = null;     // Render pipeline
+    this.uniformBuffer = null;// Matrix storage
+    this.depthTexture = null; // Depth buffer
+    this.vertexBuffer = null; // Geometry data
+    this.indexBuffer = null;  // Index data
+    this.bindGroup = null;    // Resource bindings
   }
-
+  
+  // Initialize WebGPU context
   async initialize() {
+
+    // Adapter/device setup
     const adapter = await navigator.gpu.requestAdapter();
     this.device = await adapter.requestDevice();
 
+    // Canvas configuration
     const context = this.canvas.getContext("webgpu");
     const format = navigator.gpu.getPreferredCanvasFormat();
 
@@ -25,15 +30,18 @@ export class WebGPUContext {
       alphaMode: "premultiplied",
     });
 
+    // Create GPU buffers
     this.createBuffers();
     this.createDepthTexture();
     return this.device;
   }
 
+  // Handle window resize
   resize() {
     this.createDepthTexture();
   }
 
+  // Create vertex/index/uniform buffers
   createBuffers() {
     // Vertex buffer
     this.vertexBuffer = this.device.createBuffer({
@@ -60,6 +68,7 @@ export class WebGPUContext {
     });
   }
 
+  // Create/recreate depth texture
   createDepthTexture() {
     if (this.depthTexture) this.depthTexture.destroy();
     this.depthTexture = this.device.createTexture({
@@ -69,7 +78,10 @@ export class WebGPUContext {
     });
   }
 
+  // Create render pipeline
   async createPipeline(shaderModule) {
+
+    // Bind group layout for uniforms
     const bindGroupLayout = this.device.createBindGroupLayout({
       entries: [
         {
@@ -85,10 +97,12 @@ export class WebGPUContext {
       entries: [{ binding: 0, resource: { buffer: this.uniformBuffer } }],
     });
 
+    // Pipeline configuration
     this.pipeline = this.device.createRenderPipeline({
       layout: this.device.createPipelineLayout({
         bindGroupLayouts: [bindGroupLayout],
       }),
+      // Vertex shaders
       vertex: {
         module: shaderModule,
         entryPoint: "vertexMain",
@@ -105,11 +119,13 @@ export class WebGPUContext {
           },
         ],
       },
+      // Fragment shaders
       fragment: {
         module: shaderModule,
         entryPoint: "fragmentMain",
         targets: [{ format: navigator.gpu.getPreferredCanvasFormat() }],
       },
+      // Render settings
       primitive: {
         topology: "triangle-list",
         cullMode: "none",

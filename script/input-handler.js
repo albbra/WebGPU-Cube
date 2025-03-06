@@ -1,16 +1,22 @@
 export class InputHandler {
   constructor(canvas) {
-    this.rotXAngle = 0;
-    this.rotYAngle = 0;
-    this.cameraZ = 5;
+    // Rotation state
+    this.rotXAngle = 0;  // X-axis rotation
+    this.rotYAngle = 0;  // Y-axis rotation
+    this.cameraZ = 5;    // Camera distance
+
+    // Mouse drag state
     this.isDragging = false;
     this.lastMouseX = 0;
     this.lastMouseY = 0;
 
+    // Initialize event listeners
     this.initControls(canvas);
   }
 
+  // Set up input event handlers
   initControls(canvas) {
+    // Mouse drag rotation
     canvas.addEventListener("mousedown", (e) => {
       this.isDragging = true;
       this.lastMouseX = e.clientX;
@@ -33,6 +39,7 @@ export class InputHandler {
       this.isDragging = false;
     });
 
+    // WS keys for camera zoom
     window.addEventListener("keydown", (e) => {
       const step = 0.5;
       if (e.key === "w") this.cameraZ -= step;

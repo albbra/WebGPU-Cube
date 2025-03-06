@@ -6,6 +6,7 @@ import { ShaderLoader } from "./shader-loader.js";
 
 async function initWebGPU() {
   try {
+    // Canvas setup
     const canvas = document.getElementById("webgpuCanvas");
     function updateCanvasSize() {
       canvas.width = canvas.clientWidth * window.devicePixelRatio;
@@ -40,4 +41,5 @@ async function initWebGPU() {
   }
 }
 
+// Start application
 initWebGPU();

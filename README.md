@@ -71,14 +71,25 @@ http://127.0.0.1:5500
 The project is organized as follows:
 
 ```
-your-repo-name/
-├── constants.js       # Cube vertex and index data
-├── math.js            # Matrix math utilities
-├── main.js            # Main WebGPU setup and render loop
-├── shader.wgsl        # WebGPU shader code
-├── utils.js           # Utility functions (e.g., matrix formatting)
-├── index.html         # Entry point for the application
-├── README.md          # This file
+WebGPU-Cube/
+├── .vscode/
+│ └── settings.json           # VSCode workspace settings
+├── scripts/                  # JavaScript source files
+│ ├── constants.js            # Geometry data (cube/sphere vertices)
+│ ├── input-handler.js        # Mouse/keyboard input handling
+│ ├── main.js                 # Application entry point
+│ ├── math.js                 # Matrix math utilities
+│ ├── render-loop.js          # WebGPU rendering loop
+│ ├── shader-loader.js        # WGSL shader loading
+│ ├── transform-controller.js # Matrix transformations
+│ ├── utils.js                # Helper functions
+│ └── webgpu-context.js       # WebGPU initialization and management
+├── shader/
+│ └── shader.wgsl             # WebGPU shader code
+├── style/
+│ └── style.css               # CSS styles
+├── index.html                # Main HTML entry point
+└── README.md                 # Project documentation
 ```
 
 ## Controls
