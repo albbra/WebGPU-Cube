@@ -113,7 +113,6 @@ If the cube does not render:
 
 - Check the browser console for errors (**F12 > Console**).
 - Ensure the `shader.wgsl` file is correctly loaded and compiled.
-- Verify the matrices in the console logs (e.g., Model, View, Projection, and MVP matrices).
 
 ### 3. Live Server Issues
 
